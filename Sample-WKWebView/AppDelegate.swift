@@ -12,10 +12,15 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    let factory = ViewControllerFactory()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+
+        let root = ViewController()
+        factory.navigation.setViewControllers([root], animated: false)
+        window?.rootViewController = factory.navigation
+        window?.makeKeyAndVisible()
+
         return true
     }
 
