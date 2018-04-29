@@ -12,18 +12,21 @@ import WebKit
 class ViewController: UIViewController {
 
     private let webView: WKWebView
+    private let indicator: UIActivityIndicatorView
 
     // MARK: - Initializer
 
     init(_ frame: CGRect = .zero) {
         let configuration = WKWebViewConfiguration()
         self.webView = WKWebView(frame: frame, configuration: configuration)
+        self.indicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
         super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
         let configuration = WKWebViewConfiguration()
         self.webView = WKWebView(frame: .zero, configuration: configuration)
+        self.indicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
         super.init(coder: aDecoder)
     }
 
@@ -32,6 +35,7 @@ class ViewController: UIViewController {
     override func loadView() {
         super.loadView()
         setupWebView()
+        setupIndicator()
     }
 
     override func viewDidLoad() {
@@ -116,10 +120,30 @@ extension ViewController {
         nvc.view.addSubview(webView)
     }
 
+    private func setupIndicator() {
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.activityIndicatorViewStyle = .whiteLarge
+
+        // Note: 必ず制約を有効化する前に行う
+        view.addSubview(indicator)
+
+        NSLayoutConstraint.activate([
+            indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
 
 
+    private func showIndicator() {
+        indicator.isHidden = false
+        indicator.hidesWhenStopped = true
+        indicator.startAnimating()
+    }
 
-
+    private func closeIndicator() {
+        indicator.stopAnimating()
+        indicator.isHidden = true
+    }
 
     private func showWebView() {
         UIView.animate(
