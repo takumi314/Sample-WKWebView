@@ -9,6 +9,10 @@
 import UIKit
 import WebKit
 
+extension String {
+    static let APPLE_DOCUMENT_URL = "https://developer.apple.com/"
+}
+
 class ViewController: UIViewController {
 
     private let webView: WKWebView
@@ -55,7 +59,7 @@ class ViewController: UIViewController {
         }
 
         // loading web content
-        let url =  URL(string: "https://developer.apple.com/documentation/webkit/wkwebview")!
+        let url =  URL(string: .APPLE_DOCUMENT_URL)!
         webView.load(URLRequest(url: url))
     }
 
