@@ -44,6 +44,10 @@ class ViewController: UIViewController {
         // NavigationController
         navigationController?.view.backgroundColor = .lightGray
         navigationItem.title = "Scene1"
+        if responds(to: #selector(reload)) {
+            let item = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(reload))
+            navigationItem.rightBarButtonItem = item
+        }
         if #available(iOS 11.0, *) {
             navigationController?.navigationBar.prefersLargeTitles = true
         } else {
@@ -133,6 +137,11 @@ extension ViewController {
         ])
     }
 
+    @objc private func reload() {
+        showIndicator()
+        closeWebView()
+        webView.reload()
+    }
 
     private func showIndicator() {
         indicator.isHidden = false
