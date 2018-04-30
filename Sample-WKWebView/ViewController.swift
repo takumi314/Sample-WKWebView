@@ -7,19 +7,193 @@
 //
 
 import UIKit
+import WebKit
+
+extension String {
+    static let APPLE_DOCUMENT_URL = "https://developer.apple.com/"
+}
 
 class ViewController: UIViewController {
 
+    private let webView: WKWebView
+    private let indicator: UIActivityIndicatorView
+
+    // MARK: - Initializer
+
+    init(_ frame: CGRect = .zero) {
+        let configuration = WKWebViewConfiguration()
+        self.webView = WKWebView(frame: frame, configuration: configuration)
+        self.indicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        let configuration = WKWebViewConfiguration()
+        self.webView = WKWebView(frame: .zero, configuration: configuration)
+        self.indicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        super.init(coder: aDecoder)
+    }
+
+    // MARK: - Life cycle
+
+    override func loadView() {
+        super.loadView()
+        setupWebView()
+        setupIndicator()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+
+        // NavigationController
+        navigationController?.view.backgroundColor = .lightGray
+        navigationItem.title = "Scene1"
+        if responds(to: #selector(reload)) {
+            let item = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(reload))
+            navigationItem.rightBarButtonItem = item
+        }
+        if #available(iOS 11.0, *) {
+            navigationController?.navigationBar.prefersLargeTitles = true
+        } else {
+            // Fallback on earlier versions
+        }
+
+        // loading web content
+        let url =  URL(string: .APPLE_DOCUMENT_URL)!
+        webView.load(URLRequest(url: url))
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
-
 
 }
 
+// MARK: - WKUIDelegate
+
+extension ViewController: WKUIDelegate {
+
+}
+
+// MARK: - WKNavigationDelegate
+
+extension ViewController: WKNavigationDelegate {
+
+    ///
+    /// Invoked when a main frame navigation starts.
+    ///
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation) {
+        print("Start ...")
+    }
+
+    ///
+    /// Invoked when an error occurs while starting to load data for the main frame.
+    ///
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation, withError error: Error) {
+        print("Error: \(error.localizedDescription)")
+    }
+
+    ///
+    /// Invoked when content starts arriving for the main frame.
+    ///
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation) {
+        print("Committing ...")
+        closeWebView()
+        showIndicator()
+    }
+
+    ///
+    /// Invoked when an error occurs during a committed main frame navigation.
+    ///
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation, withError error: Error) {
+        print("Error: \(error.localizedDescription)")
+        closeIndicator()
+        showWebView()
+    }
+
+    ///
+    /// Invoked when a main frame navigation completes.
+    ///
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
+        print("Finished !")
+        closeIndicator()
+        showWebView()
+    }
+
+}
+
+// MARK: - Private methods
+
+extension ViewController {
+
+    private func setupWebView() {
+        let height = UIApplication.shared.statusBarFrame.height
+            + navigationController!.navigationBar.frame.height
+        let rect = CGRect(x: 0.0,
+                          y: height,
+                          width: UIScreen.main.bounds.width,
+                          height: UIScreen.main.bounds.height - height)
+        webView.frame = rect
+        webView.scrollView.bounces = false
+        webView.isHidden = true
+
+        webView.uiDelegate = self
+        webView.navigationDelegate = self
+
+        guard let nvc = self.navigationController else {
+            view = webView
+            return
+        }
+
+        nvc.view.addSubview(webView)
+    }
+
+    private func setupIndicator() {
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.activityIndicatorViewStyle = .whiteLarge
+
+        // Note: 必ず制約を有効化する前に行う
+        view.addSubview(indicator)
+
+        NSLayoutConstraint.activate([
+            indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
+
+    @objc private func reload() {
+        showIndicator()
+        closeWebView()
+        webView.reload()
+    }
+
+    private func showIndicator() {
+        indicator.isHidden = false
+        indicator.hidesWhenStopped = true
+        indicator.startAnimating()
+    }
+
+    private func closeIndicator() {
+        indicator.stopAnimating()
+        indicator.isHidden = true
+    }
+
+    private func showWebView() {
+        UIView.animate(
+            withDuration: 0.3,
+            animations: {
+                self.webView.isOpaque = false
+                self.webView.isHidden = false
+        })
+    }
+
+    private func closeWebView() {
+        UIView.animate(
+            withDuration: 0.5,
+            animations: {
+                self.webView.isOpaque = true
+                self.webView.isHidden = true
+        })
+    }
+
+}
