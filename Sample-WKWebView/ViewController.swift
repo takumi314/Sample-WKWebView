@@ -67,6 +67,38 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
 
+    override func willTransition(to newCollection: UITraitCollection,
+                                 with coordinator: UIViewControllerTransitionCoordinator) {
+        coordinator.animate(
+            alongsideTransition: { (context) in
+                // NavigationController
+
+        }) { (context) in
+            let height = UIApplication.shared.statusBarFrame.height
+                + self.navigationController!.navigationBar.frame.height
+            var rect = CGRect(x: 0.0,
+                              y: height,
+                              width: UIScreen.main.bounds.width,
+                              height: UIScreen.main.bounds.height - height)
+            if #available(iOS 11.0, *) {
+                rect = CGRect(x: self.navigationController!.view.safeAreaInsets.left,
+                              y: height,
+                              width: UIScreen.main.bounds.width - 2 * self.navigationController!.view.safeAreaInsets.left,
+                              height: UIScreen.main.bounds.height - height)
+            } else {
+                // Fallback on earlier versions
+            }
+
+            // NavigationController
+            UIView.animate(
+                withDuration: 0.5,
+                animations: {
+                    self.webView.frame = rect
+            })
+        }
+        super.willTransition(to: newCollection, with: coordinator)
+    }
+
 }
 
 // MARK: - WKUIDelegate
@@ -128,11 +160,20 @@ extension ViewController {
 
     private func setupWebView() {
         let height = UIApplication.shared.statusBarFrame.height
-            + navigationController!.navigationBar.frame.height
-        let rect = CGRect(x: 0.0,
+            + self.navigationController!.navigationBar.frame.height
+        var rect = CGRect(x: 0.0,
                           y: height,
                           width: UIScreen.main.bounds.width,
                           height: UIScreen.main.bounds.height - height)
+        if #available(iOS 11.0, *) {
+            rect = CGRect(x: self.navigationController!.view.safeAreaInsets.left,
+                          y: height,
+                          width: UIScreen.main.bounds.width - 2 * self.navigationController!.view.safeAreaInsets.left,
+                          height: UIScreen.main.bounds.height - height)
+        } else {
+            // Fallback on earlier versions
+        }
+        
         webView.frame = rect
         webView.scrollView.bounces = false
         webView.isHidden = true
