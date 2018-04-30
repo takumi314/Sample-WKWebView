@@ -79,23 +79,43 @@ extension ViewController: WKUIDelegate {
 
 extension ViewController: WKNavigationDelegate {
 
+    ///
+    /// Invoked when a main frame navigation starts.
+    ///
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation) {
+        print("Start ...")
+    }
+
+    ///
+    /// Invoked when an error occurs while starting to load data for the main frame.
+    ///
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation, withError error: Error) {
+        print("Error: \(error.localizedDescription)")
+    }
+
+    ///
+    /// Invoked when content starts arriving for the main frame.
+    ///
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation) {
-        print("Start !")
+        print("Committing ...")
         closeWebView()
         showIndicator()
     }
 
+    ///
+    /// Invoked when an error occurs during a committed main frame navigation.
+    ///
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation, withError error: Error) {
-        print("Error !")
+        print("Error: \(error.localizedDescription)")
         closeIndicator()
         showWebView()
     }
 
     ///
-    /// Webのロード完了後に実行される
+    /// Invoked when a main frame navigation completes.
     ///
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
-        print("Finided !")
+        print("Finished !")
         closeIndicator()
         showWebView()
     }
