@@ -17,6 +17,10 @@
 		E16DC82120922DDA00FC5F56 /* Sample_WKWebViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16DC82020922DDA00FC5F56 /* Sample_WKWebViewTests.swift */; };
 		E16DC82D2092370400FC5F56 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E16DC82C2092370400FC5F56 /* WebKit.framework */; };
 		E1E5DAA420969A2600B59F73 /* ViewControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E5DAA320969A2600B59F73 /* ViewControllerFactory.swift */; };
+		E1E5DAA9209A1CAA00B59F73 /* storyboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E5DAA7209A1CA900B59F73 /* storyboards.swift */; };
+		E1E5DAAA209A1CAA00B59F73 /* assets-images.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E5DAA8209A1CA900B59F73 /* assets-images.swift */; };
+		E1E5DAAD209A1EDA00B59F73 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E1E5DAAB209A1EDA00B59F73 /* Localizable.strings */; };
+		E1E5DAAF209A205E00B59F73 /* strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E5DAAE209A205E00B59F73 /* strings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +52,10 @@
 		E16DC82220922DDA00FC5F56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E16DC82C2092370400FC5F56 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		E1E5DAA320969A2600B59F73 /* ViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerFactory.swift; sourceTree = "<group>"; };
+		E1E5DAA7209A1CA900B59F73 /* storyboards.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = storyboards.swift; path = "Sample-WKWebView/CodeGenerated/storyboards.swift"; sourceTree = SOURCE_ROOT; };
+		E1E5DAA8209A1CA900B59F73 /* assets-images.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "assets-images.swift"; path = "Sample-WKWebView/CodeGenerated/assets-images.swift"; sourceTree = SOURCE_ROOT; };
+		E1E5DAAC209A1EDA00B59F73 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E1E5DAAE209A205E00B59F73 /* strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = strings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +113,7 @@
 		E16DC80A20922DDA00FC5F56 /* Sample-WKWebView */ = {
 			isa = PBXGroup;
 			children = (
+				E1E5DAA6209A1C6200B59F73 /* CodeGenerated */,
 				E16DC80B20922DDA00FC5F56 /* AppDelegate.swift */,
 				E16DC80D20922DDA00FC5F56 /* ViewController.swift */,
 				E16DC80F20922DDA00FC5F56 /* Main.storyboard */,
@@ -112,6 +121,7 @@
 				E16DC81420922DDA00FC5F56 /* LaunchScreen.storyboard */,
 				E16DC81720922DDA00FC5F56 /* Info.plist */,
 				E1E5DAA320969A2600B59F73 /* ViewControllerFactory.swift */,
+				E1E5DAAB209A1EDA00B59F73 /* Localizable.strings */,
 			);
 			path = "Sample-WKWebView";
 			sourceTree = "<group>";
@@ -135,6 +145,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E1E5DAA6209A1C6200B59F73 /* CodeGenerated */ = {
+			isa = PBXGroup;
+			children = (
+				E1E5DAAE209A205E00B59F73 /* strings.swift */,
+				E1E5DAA8209A1CA900B59F73 /* assets-images.swift */,
+				E1E5DAA7209A1CA900B59F73 /* storyboards.swift */,
+			);
+			path = CodeGenerated;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -148,6 +168,7 @@
 				E16DC80620922DDA00FC5F56 /* Resources */,
 				ABF560DA58784857284FB192 /* [CP] Embed Pods Frameworks */,
 				3DF7D911BE4AEAE20B1E7966 /* [CP] Copy Pods Resources */,
+				E1E5DAA52098BF7E00B59F73 /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -225,6 +246,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E16DC81620922DDA00FC5F56 /* LaunchScreen.storyboard in Resources */,
+				E1E5DAAD209A1EDA00B59F73 /* Localizable.strings in Resources */,
 				E16DC81320922DDA00FC5F56 /* Assets.xcassets in Resources */,
 				E16DC81120922DDA00FC5F56 /* Main.storyboard in Resources */,
 			);
@@ -336,6 +358,20 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		E1E5DAA52098BF7E00B59F73 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PODS_ROOT}/SwiftGen/bin/SwiftGen";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -343,6 +379,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1E5DAAA209A1CAA00B59F73 /* assets-images.swift in Sources */,
+				E1E5DAA9209A1CAA00B59F73 /* storyboards.swift in Sources */,
+				E1E5DAAF209A205E00B59F73 /* strings.swift in Sources */,
 				E1E5DAA420969A2600B59F73 /* ViewControllerFactory.swift in Sources */,
 				E16DC80E20922DDA00FC5F56 /* ViewController.swift in Sources */,
 				E16DC80C20922DDA00FC5F56 /* AppDelegate.swift in Sources */,
@@ -382,6 +421,14 @@
 				E16DC81520922DDA00FC5F56 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		E1E5DAAB209A1EDA00B59F73 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E1E5DAAC209A1EDA00B59F73 /* Base */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
