@@ -67,6 +67,38 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
 
+    override func willTransition(to newCollection: UITraitCollection,
+                                 with coordinator: UIViewControllerTransitionCoordinator) {
+        coordinator.animate(
+            alongsideTransition: { (context) in
+                // NavigationController
+
+        }) { (context) in
+            let height = UIApplication.shared.statusBarFrame.height
+                + self.navigationController!.navigationBar.frame.height
+            var rect = CGRect(x: 0.0,
+                              y: height,
+                              width: UIScreen.main.bounds.width,
+                              height: UIScreen.main.bounds.height - height)
+            if #available(iOS 11.0, *) {
+                rect = CGRect(x: self.navigationController!.view.safeAreaInsets.left,
+                              y: height,
+                              width: UIScreen.main.bounds.width - 2 * self.navigationController!.view.safeAreaInsets.left,
+                              height: UIScreen.main.bounds.height - height)
+            } else {
+                // Fallback on earlier versions
+            }
+
+            // NavigationController
+            UIView.animate(
+                withDuration: 0.5,
+                animations: {
+                    self.webView.frame = rect
+            })
+        }
+        super.willTransition(to: newCollection, with: coordinator)
+    }
+
 }
 
 // MARK: - WKUIDelegate
@@ -84,6 +116,7 @@ extension ViewController: WKNavigationDelegate {
     ///
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation) {
         print("Start ...")
+        showIndicator()
     }
 
     ///
@@ -91,6 +124,12 @@ extension ViewController: WKNavigationDelegate {
     ///
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation, withError error: Error) {
         print("Error: \(error.localizedDescription)")
+        closeIndicator()
+
+        // dialog
+        let alert = UIAlertController(title: L10n.AlertTitle.error, message: L10n.AlertMessage.error, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: L10n.Alertaction.ok, style: .default))
+        present(alert, animated: true)
     }
 
     ///
@@ -99,7 +138,6 @@ extension ViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation) {
         print("Committing ...")
         closeWebView()
-        showIndicator()
     }
 
     ///
@@ -128,11 +166,20 @@ extension ViewController {
 
     private func setupWebView() {
         let height = UIApplication.shared.statusBarFrame.height
-            + navigationController!.navigationBar.frame.height
-        let rect = CGRect(x: 0.0,
+            + self.navigationController!.navigationBar.frame.height
+        var rect = CGRect(x: 0.0,
                           y: height,
                           width: UIScreen.main.bounds.width,
                           height: UIScreen.main.bounds.height - height)
+        if #available(iOS 11.0, *) {
+            rect = CGRect(x: self.navigationController!.view.safeAreaInsets.left,
+                          y: height,
+                          width: UIScreen.main.bounds.width - 2 * self.navigationController!.view.safeAreaInsets.left,
+                          height: UIScreen.main.bounds.height - height)
+        } else {
+            // Fallback on earlier versions
+        }
+        
         webView.frame = rect
         webView.scrollView.bounces = false
         webView.isHidden = true

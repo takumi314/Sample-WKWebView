@@ -1,0 +1,16 @@
+/* 
+  Localizable.strings
+  Sample-WKWebView
+
+  Created by NishiokaKohei on 2018/05/03.
+  Copyright © 2018年 Takumi. All rights reserved.
+*/
+
+"alert.title"           = "Alert Title";
+"alert.message"         = "Alert Message";
+"alert_title.error"     = "Error";
+"alert_message.error"   = "Something is wrong!!";
+"alertAction.title"     = "Alert Title";
+"alertAction.message"   = "Alert Message";
+"alertAction.ok"        = "OK";
+"alertAction.cancel"    = "Cancel";
