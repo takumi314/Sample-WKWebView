@@ -8,6 +8,8 @@
 
 "alert.title"           = "Alert Title";
 "alert.message"         = "Alert Message";
+"alert_title.error"     = "Error";
+"alert_message.error"   = "Something is wrong!!";
 "alertAction.title"     = "Alert Title";
 "alertAction.message"   = "Alert Message";
 "alertAction.ok"        = "OK";

@@ -116,6 +116,7 @@ extension ViewController: WKNavigationDelegate {
     ///
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation) {
         print("Start ...")
+        showIndicator()
     }
 
     ///
@@ -123,6 +124,12 @@ extension ViewController: WKNavigationDelegate {
     ///
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation, withError error: Error) {
         print("Error: \(error.localizedDescription)")
+        closeIndicator()
+
+        // dialog
+        let alert = UIAlertController(title: L10n.AlertTitle.error, message: L10n.AlertMessage.error, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: L10n.Alertaction.ok, style: .default))
+        present(alert, animated: true)
     }
 
     ///
@@ -131,7 +138,6 @@ extension ViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation) {
         print("Committing ...")
         closeWebView()
-        showIndicator()
     }
 
     ///

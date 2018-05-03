@@ -15,6 +15,16 @@ enum L10n {
     static let title = L10n.tr("Localizable", "alert.title")
   }
 
+  enum AlertMessage {
+    /// Something is wrong!!
+    static let error = L10n.tr("Localizable", "alert_message.error")
+  }
+
+  enum AlertTitle {
+    /// Error
+    static let error = L10n.tr("Localizable", "alert_title.error")
+  }
+
   enum Alertaction {
     /// Cancel
     static let cancel = L10n.tr("Localizable", "alertAction.cancel")
