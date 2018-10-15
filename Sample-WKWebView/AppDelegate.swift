@@ -18,6 +18,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let root = ViewController()
         factory.navigation.setViewControllers([root], animated: false)
+
+        // 下ツールバー
+        factory.navigation.setToolbarHidden(false, animated: false)
+
         window?.rootViewController = factory.navigation
         window?.makeKeyAndVisible()
 

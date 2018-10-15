@@ -10,12 +10,21 @@ import UIKit
 
 class CustomToolbar: UIToolbar {
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
-    */
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+
+        setup()
+    }
+
+    func setup() {
+        // バーの色
+        self.barTintColor = UIColor.orange
+        // アイテムの色
+        self.tintColor = UIColor.white
+    }
 
 }
