@@ -11,6 +11,6 @@ import UIKit
 
 class ViewControllerFactory: NSObject {
 
-    let navigation = UINavigationController()
+    let navigation = UINavigationController(navigationBarClass: nil, toolbarClass: CustomToolbar.self)
 
 }
