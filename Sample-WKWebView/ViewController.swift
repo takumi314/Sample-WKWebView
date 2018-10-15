@@ -15,35 +15,21 @@ extension String {
 
 class ViewController: UIViewController {
 
-    private let webView: WKWebView
-    private let indicator: UIActivityIndicatorView
+    private var webView: WKWebView!
+    private var indicator: UIActivityIndicatorView!
 
-    // MARK: - Initializer
+    private var backBtn: UIBarButtonItem!
+    private var forwardBtn: UIBarButtonItem!
 
-    init(_ frame: CGRect = .zero) {
-        let configuration = WKWebViewConfiguration()
-        self.webView = WKWebView(frame: frame, configuration: configuration)
-        self.indicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        let configuration = WKWebViewConfiguration()
-        self.webView = WKWebView(frame: .zero, configuration: configuration)
-        self.indicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
-        super.init(coder: aDecoder)
-    }
 
     // MARK: - Life cycle
 
-    override func loadView() {
-        super.loadView()
-        setupWebView()
-        setupIndicator()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        let configuration = WKWebViewConfiguration()
+        self.webView = WKWebView(frame: .zero, configuration: configuration)
+        self.indicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
 
         // NavigationController
         navigationController?.view.backgroundColor = .lightGray
@@ -58,9 +44,56 @@ class ViewController: UIViewController {
             // Fallback on earlier versions
         }
 
+        // ToolBar
+
+        //削除ボタンを作成
+        let backBtn = UIBarButtonItem(barButtonSystemItem: .rewind, target: self, action: #selector(onBack))
+        let forwardBtn = UIBarButtonItem(barButtonSystemItem: .fastForward, target: self, action: #selector(onForward))
+        let flexible = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+        self.toolbarItems = [backBtn, forwardBtn, flexible]
+        self.backBtn = backBtn
+        self.forwardBtn = forwardBtn
+
+        // KVO
+        webView.addObserver(self, forKeyPath: "canGoBack", options: [.new], context: nil)
+        webView.addObserver(self, forKeyPath: "canGoForward", options: [.new], context: nil)
+        backBtn.isEnabled = false
+        forwardBtn.isEnabled = false
+
+        setupWebView()
+        setupIndicator()
+    }
+
+    @objc func onBack() {
+        webView.goBack()
+    }
+
+    @objc func onForward() {
+        webView.goForward()
+    }
+
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
         // loading web content
         let url =  URL(string: .APPLE_DOCUMENT_URL)!
         webView.load(URLRequest(url: url))
+    }
+
+
+    override func viewDidDisappear(_ animated: Bool) {
+        webView.removeObserver(self, forKeyPath: "canGoBack")
+        webView.removeObserver(self, forKeyPath: "canGoForward")
+    }
+
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?,
+                               change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "canGoBack" {
+            backBtn.isEnabled = webView.canGoBack
+        } else if keyPath == "canGoForward" {
+            forwardBtn.isEnabled = webView.canGoForward
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -164,22 +197,28 @@ extension ViewController: WKNavigationDelegate {
 
 extension ViewController {
 
+    private func setupToolBar() {
+
+    }
+
     private func setupWebView() {
         let height = UIApplication.shared.statusBarFrame.height
-            + self.navigationController!.navigationBar.frame.height
+                        + navigationController!.navigationBar.frame.height
+
+        let toolBarHeight = navigationController?.toolbar.frame.height
         var rect = CGRect(x: 0.0,
                           y: height,
                           width: UIScreen.main.bounds.width,
-                          height: UIScreen.main.bounds.height - height)
+                          height: UIScreen.main.bounds.height - height - toolBarHeight!)
         if #available(iOS 11.0, *) {
             rect = CGRect(x: self.navigationController!.view.safeAreaInsets.left,
                           y: height,
                           width: UIScreen.main.bounds.width - 2 * self.navigationController!.view.safeAreaInsets.left,
-                          height: UIScreen.main.bounds.height - height)
+                          height: UIScreen.main.bounds.height - height - toolBarHeight!)
         } else {
             // Fallback on earlier versions
         }
-        
+
         webView.frame = rect
         webView.scrollView.bounces = false
         webView.isHidden = true
